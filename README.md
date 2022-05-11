@@ -109,7 +109,7 @@ typedef struct {
 ```
 
 Implemention policy is following.
-- Convert Generic Type "T" to void*
+- Convert Generic Type T/List\<T\> to void*
 - TypeInfo is runtime infomation for generic type.
 - Use memcpy() to asign instance.
 - Allocate local heap for generic instance. (ex alloca())
