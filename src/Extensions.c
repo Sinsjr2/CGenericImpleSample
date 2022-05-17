@@ -104,6 +104,26 @@ void Extensions_GenericPassThroughTest() {
 }
 
 void Extensions_GenericSwap_T(const TypeInfo *generic_T, void **a, void **b) {
+void Extensions_GenericPassThroughTestObj() {
+    // .locals init (
+    //     [0] object a
+    // )
+
+    // IL_0000: nop
+    System_Object* a_System_Object;
+    System_Object* stack_0_0;
+
+    // IL_0001: newobj instance void [System.Runtime]System.Object::.ctor()
+    stack_0_0 = il2c_get_uninitialized_object(System_Object);
+    System_Object__ctor(stack_0_0);
+    // IL_0006: call !!0 C::GenericPassThrough<object>(!!0)
+    // pass pointer of pointer
+    Extensions_GenericPassThrough_T(il2c_typeof(System_Object), &stack_0_0, &stack_0_0);
+    // IL_000b: stloc.0
+    a_System_Object = stack_0_0;
+    // IL_000c: ret
+}
+
     // .locals init (
     //     [0] !!T temp
     // )

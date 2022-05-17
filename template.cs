@@ -1,4 +1,4 @@
-public interface IGenericParent<out T> {
+ public interface IGenericParent<out T> {
     T GenericReturn();
 }
 
@@ -148,6 +148,19 @@ static class Extensions {
     // IL_0009: ret
     public static void GenericPassThroughTest() {
         var a = GenericPassThrough(10);
+    }
+
+    // .locals init (
+    //     [0] object a
+    // )
+
+    // IL_0000: nop
+    // IL_0001: newobj instance void [System.Runtime]System.Object::.ctor()
+    // IL_0006: call !!0 C::GenericPassThrough<object>(!!0)
+    // IL_000b: stloc.0
+    // IL_000c: ret
+    public static void GenericPassThroughTestObj() {
+        var a = GenericPassThrough(new object());
     }
 
     // .locals init (
