@@ -44,56 +44,58 @@ static class Extensions {
 
 src/Extensions.c
 ``` c
-void Extensions_GenericPassThrough_T(const TypeInfo *generic_T, void *result,
-                                     void *x) {
+System_Type Extensions_GetGenericType_T(IL2C_RUNTIME_TYPE generic_T) {
+    // .locals init (
+    //     [0] class [System.Runtime]System.Type
+    // )
+    System_Type local_0;
+    System_RuntimeTypeHandle stack_0_0;
+    System_Type stack_0_1;
+    System_Type stack_0_2;
+
+    local_0 = NULL;
+
+    // IL_0000: nop
+    // IL_0001: ldtoken !!T
+    stack_0_0 = generic_T;
+    // IL_0006: call class [System.Runtime]System.Type [System.Runtime]System.Type::GetTypeFromHandle(valuetype [System.Runtime]System.RuntimeTypeHandle)
+    stack_0_1 = System_Type_GetTypeFromHandle(stack_0_0);
+    // IL_000b: stloc.0
+    local_0 = stack_0_1;
+    // IL_000c: br.s IL_000e
+
+    // IL_000e: ldloc.0
+    stack_0_2 = local_0;
+    // IL_000f: ret
+    return stack_0_2;
+}
+
+void Extensions_GenericPassThrough_T(IL2C_RUNTIME_TYPE generic_T, void *result, void *x) {
     // .locals init (
     //     [0] !!T
     // )
     void *local_0;
     void *stack_0;
     void *stack_1;
+    uint32_t runtimeSize_T;
+
+    runtimeSize_T = il2c_sizeof__(generic_T)
 
     local_0 = NULL;
-    stack_0 = alloca(generic_T->size);
+    stack_0 = alloca(runtimeSize_T);
 
     // IL_0000: nop
     // IL_0001: ldarg.0
-    memcpy(stack_0, x, generic_T->size);
+    memcpy(stack_0, genericArg_x, runtimeSize_T);
     // IL_0002: stloc.0
-    memcpy(local_0, stack_0, generic_T->size);
+    memcpy(local_0, stack_0, runtimeSize_T);
     // IL_0003: br.s IL_0005
 
     // IL_0005: ldloc.0
-    memcpy(stack_1, local_0, generic_T->size);
+    memcpy(stack_1, local_0, runtimeSize_T);
     // IL_0006: ret
-    memcpy(result, stack_1, generic_T->size);
+    memcpy(result, stack_1, runtimeSize_T);
 }
-
-void Extensions_GenericPassThroughTest() {
-    // .locals init (
-    //     [0] int32 a
-    // )
-    System_Int32 a_System_Int32;
-    System_Int32 stack_0_0;
-
-    // IL_0000: nop
-    // IL_0001: ldc.i4.s 10
-    stack_0_0 = 10;
-    // IL_0003: call !!0 Extensions::GenericPassThrough<int32>(!!0)
-    Extensions_GenericPassThrough_T(&System_Int32TypeInfo, &stack_0_0, &stack_0_0);
-    // IL_0008: stloc.0
-    a_System_Int32 = stack_0_0;
-    // IL_0009: ret
-}
-```
-
-include/System_Int32.c
-``` c
-const TypeInfo System_Int32TypeInfo = {
-    sizeof System_Int32,
-    il2c_alignof(System_Int32),
-    NULL /* TODO Add System_Int32 TypeHandle */
-};
 ```
 
 include/TypeInfo.h
