@@ -96,22 +96,35 @@ void Extensions_GenericPassThrough_T(IL2C_RUNTIME_TYPE generic_T, void *result, 
     // IL_0006: ret
     memcpy(result, stack_1, runtimeSize_T);
 }
+
+void Extensions_GenericPassThroughTestObj() {
+    // .locals init (
+    //     [0] object a
+    // )
+
+    // IL_0000: nop
+    System_Object* a_System_Object;
+    System_Object* stack_0_0;
+
+    // IL_0001: newobj instance void [System.Runtime]System.Object::.ctor()
+    stack_0_0 = il2c_get_uninitialized_object(System_Object);
+    System_Object__ctor(stack_0_0);
+    // IL_0006: call !!0 C::GenericPassThrough<object>(!!0)
+    // pass pointer of pointer
+    Extensions_GenericPassThrough_T(il2c_typeof(System_Object), &stack_0_0, &stack_0_0);
+    // IL_000b: stloc.0
+    a_System_Object = stack_0_0;
+    // IL_000c: ret
+}
 ```
 
-include/TypeInfo.h
-``` C
-typedef struct {
-    /* struct size */
-    size_t size;
-    /* struct alignment ex. 1, 2, 4, 8 */
-    size_t alignment;
-    /* generic type */
-    const IL2C_RUNTIME_TYPE *typeHandle;
-} TypeInfo;
-```
+
 
 Implemention policy is following.
 - Convert Generic Type T/List\<T\> to void*
+  case T is value type: copy member filelds to new instance
+  case T is object reference type: copy pointer to new local variable with memcpy.
+     so, this is **not **`Object.MemberwiseClone` https://docs.microsoft.com/ja-jp/dotnet/api/system.object.memberwiseclone?view=net-6.0
 - TypeInfo is runtime infomation for generic type.
 - Use memcpy() to asign instance.
 - Allocate local heap for generic instance. (ex alloca())
