@@ -1,41 +1,44 @@
 #include "Extensions.h"
 #include "System_Int32.h"
 
-void Extensions_GenericAction_T(const TypeInfo *generic_T, void *value) {
+void Extensions_GenericAction_T(IL2C_RUNTIME_TYPE generic_T, void *value) {
 }
 
-void Extensions_GenericAction_T1_T2(const TypeInfo *generic_T1, const *generic_T2,
+void Extensions_GenericAction_T1_T2(IL2C_RUNTIME_TYPE generic_T, IL2C_RUNTIME_TYPE generic_T2,
                                     void *a, void *b) {
 }
 
-void Extensions_GenericReturn_T(const TypeInfo *generic_T, void *result) {
+void Extensions_GenericReturn_T(IL2C_RUNTIME_TYPE generic_T, void *result) {
     void *local_0;
     void *local_1;
 
     void **stack_0_0;
     void *stack_0_1;
     void *stack_1_0;
+    uint32_t runtimeSize_T;
 
-    local_0 = alloca(generic_T->size);
-    local_1 = alloca(generic_T->size);
-    stack_0_1 = alloca(generic_T->size);
+    runtimeSize_T = il2c_sizeof__(generic_T)
+
+    local_0 = alloca(runtimeSize_T);
+    local_1 = alloca(runtimeSize_T);
+    stack_0_1 = alloca(runtimeSize_T);
 
     // IL_0001: ldloca.s 0
     stack_0_0 = &local_0;
     // IL_0003: initobj !!T
-    memset(stack_0_0, 0x00, generic_T->size);
+    memset(stack_0_0, 0x00, runtimeSize_T);
     // IL_0009: ldloc.0
-    memcpy(stack_0_1, local_0, generic_T->size);
+    memcpy(stack_0_1, local_0, runtimeSize_T);
     // IL_000a: stloc.1
-    memcpy(local_1, stack_0_1, generic_T->size);
+    memcpy(local_1, stack_0_1, runtimeSize_T);
     // IL_000b: br.s IL_000d
     // IL_000d: ldloc.1
-    memcpy(stack_1_0, local_1, generic_T->size);
+    memcpy(stack_1_0, local_1, runtimeSize_T);
     // IL_000e: ret
-    memcpy(result, stack_1_0, generic_T);
+    memcpy(result, stack_1_0, runtimeSize_T);
 }
 
-System_Type Extensions_GetGenericType_T(const TypeInfo *generic_T) {
+System_Type Extensions_GetGenericType_T(IL2C_RUNTIME_TYPE generic_T) {
     // .locals init (
     //     [0] class [System.Runtime]System.Type
     // )
@@ -48,7 +51,7 @@ System_Type Extensions_GetGenericType_T(const TypeInfo *generic_T) {
 
     // IL_0000: nop
     // IL_0001: ldtoken !!T
-    stack_0_0 = generic_T->typeHandle;
+    stack_0_0 = generic_T;
     // IL_0006: call class [System.Runtime]System.Type [System.Runtime]System.Type::GetTypeFromHandle(valuetype [System.Runtime]System.RuntimeTypeHandle)
     stack_0_1 = System_Type_GetTypeFromHandle(stack_0_0);
     // IL_000b: stloc.0
@@ -61,29 +64,31 @@ System_Type Extensions_GetGenericType_T(const TypeInfo *generic_T) {
     return stack_0_2;
 }
 
-void Extensions_GenericPassThrough_T(const TypeInfo *generic_T, void *result,
-                                     void *x) {
+void Extensions_GenericPassThrough_T(IL2C_RUNTIME_TYPE generic_T, void *result, void *x) {
     // .locals init (
     //     [0] !!T
     // )
     void *local_0;
     void *stack_0;
     void *stack_1;
+    uint32_t runtimeSize_T;
+
+    runtimeSize_T = il2c_sizeof__(generic_T)
 
     local_0 = NULL;
-    stack_0 = alloca(generic_T->size);
+    stack_0 = alloca(runtimeSize_T);
 
     // IL_0000: nop
     // IL_0001: ldarg.0
-    memcpy(stack_0, x, generic_T->size);
+    memcpy(stack_0, genericArg_x, runtimeSize_T);
     // IL_0002: stloc.0
-    memcpy(local_0, stack_0, generic_T->size);
+    memcpy(local_0, stack_0, runtimeSize_T);
     // IL_0003: br.s IL_0005
 
     // IL_0005: ldloc.0
-    memcpy(stack_1, local_0, generic_T->size);
+    memcpy(stack_1, local_0, runtimeSize_T);
     // IL_0006: ret
-    memcpy(result, stack_1, generic_T->size);
+    memcpy(result, stack_1, runtimeSize_T);
 }
 
 void Extensions_GenericPassThroughTest() {
@@ -97,13 +102,12 @@ void Extensions_GenericPassThroughTest() {
     // IL_0001: ldc.i4.s 10
     stack_0_0 = 10;
     // IL_0003: call !!0 Extensions::GenericPassThrough<int32>(!!0)
-    Extensions_GenericPassThrough_T(&System_Int32TypeInfo, &stack_0_0, &stack_0_0);
+    Extensions_GenericPassThrough_T(il2c_typeof(System_Int32), &stack_0_0, &stack_0_0);
     // IL_0008: stloc.0
     a_System_Int32 = stack_0_0;
     // IL_0009: ret
 }
 
-void Extensions_GenericSwap_T(const TypeInfo *generic_T, void **a, void **b) {
 void Extensions_GenericPassThroughTestObj() {
     // .locals init (
     //     [0] object a
@@ -124,6 +128,7 @@ void Extensions_GenericPassThroughTestObj() {
     // IL_000c: ret
 }
 
+void Extensions_GenericSwap_T(IL2C_RUNTIME_TYPE generic_T, void **a, void **b) {
     // .locals init (
     //     [0] !!T temp
     // )
@@ -132,32 +137,35 @@ void Extensions_GenericPassThroughTestObj() {
     void *stack_0_1;
     void **stack_1_0;
     void *stack_1_1;
+    uint32_t runtimeSize_T;
 
-    temp = alloca(generic_T->size);
-    stack_0_1 = alloca(generic_T->size);
-    stack_1_1 = alloca(generic_T->size);
+    runtimeSize_T = il2c_sizeof__(generic_T)
+
+    temp = alloca(runtimeSize_T);
+    stack_0_1 = alloca(runtimeSize_T);
+    stack_1_1 = alloca(runtimeSize_T);
 
     // IL_0000: nop
     // IL_0001: ldarg.0
     stack_0_0 = a;
     // IL_0002: ldobj !!T
-    memcpy(stack_0_1, *stack_0_0, generic_T->size);
+    memcpy(stack_0_1, *stack_0_0, runtimeSize_T);
     // IL_0007: stloc.0
-    memcpy(temp, stack_0_1, generic_T->size);
+    memcpy(temp, stack_0_1, runtimeSize_T);
     // IL_0008: ldarg.0
     stack_0_0 = a;
     // IL_0009: ldarg.1
     stack_1_0 = b;
     // IL_000a: ldobj !!T
-    memcpy(stack_1_1, *stack_1_0, generic_T->size);
+    memcpy(stack_1_1, *stack_1_0, runtimeSize_T);
     // IL_000f: stobj !!T
-    memcpy(*stack_0_0, stack_1_1, generic_T->size);
+    memcpy(*stack_0_0, stack_1_1, runtimeSize_T);
     // IL_0014: ldarg.1
     stack_0_0 = b;
     // IL_0015: ldloc.0
-    memcpy(stack_1_1, temp, generic_T->size);
+    memcpy(stack_1_1, temp, runtimeSize_T);
     // IL_0016: stobj !!T
-    memcpy(*stack_0_0, stack_1_1, generic_T->size)
+    memcpy(*stack_0_0, stack_1_1, runtimeSize_T)
     // IL_001b: ret
 }
 
@@ -211,7 +219,7 @@ void Extensions_GenericSwapTest() {
 }
 
 
-void Extensions_CallOtherGeneric_T(const TypeInfo *generic_T, void* result,
+void Extensions_CallOtherGeneric_T(IL2C_RUNTIME_TYPE generic_T, void* result,
                                    void* value) {
     // .locals init (
     //     [0] class GenericClass`1<!!T> foo,

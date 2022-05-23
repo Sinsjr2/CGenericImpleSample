@@ -10,6 +10,8 @@ class GenericClass<T> : IGeneric<T> {
     T value;
     int integer;
 
+    static string Str;
+
     // .locals init (
     //     [0] !T
     // )

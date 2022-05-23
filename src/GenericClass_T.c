@@ -4,48 +4,88 @@
 #include "TypeInfo.h"
 
 typedef struct {
-    const TypeInfo *generic_T;
-    /* struct total size */
-    const size_t size;
-    struct {
-        const size_t base;
-        const size_t value;
-        const size_t integer;
-    } pos;
-    /* layout info */
+    const size_t base;
+    const size_t value;
+    const size_t integer;
 } GenericClass_T_Layout;
+
+typedef struct GenericClass_T_STATIC_FIELDS_DECL__ {
+    SystemString* Str;
+} GenericClass_T_STATIC_FIELDS;
+
+typedef struct GenericClass_T_RUNTIME_TYPE_DECL__ {
+    IL2C_RUNTIME_TYPE_DECL runtimeType;
+    uintptr_t interfaces[2][1];
+} GenericClass_T_RUNTIME_TYPE;
+
+typedef struct GenericClass_T_GENERIC_CONTEXT_DECL {
+    GenericClass_T_RUNTIME_TYPE runtimeType;
+    GenericClass_T_Layout layout;
+    GenericClass_T_STATIC_FIELDS fields
+} GenericClass_T_GENERIC_CONTEXT;
 
 typedef union AlignmentGenericClass_T {
     System_Object* __1_base;
     System_Int32 __2_integer;
     GenericClass_T_Layout layout;
-}
+};
 
-inline size_t CalcTotalSizeGenericClass_T(const TypeInfo *generic_T) {
+GenericClass_T_GENERIC_CONTEXT* CreateGenericClass_T_GENERIC_CONTEXT(IL2C_RUNTIME_TYPE generic_T);
+
+inline size_t CalcTotalSizeGenericClass_T(IL2C_RUNTIME_TYPE generic_T) {
     return il2c_calc_field_pos(
              il2c_calc_field_pos(
                il2c_calc_field_pos(
                  il2c_calc_field_pos(
                    sizeof(System_Object*),
-                   generic_T->alignment) + generic_T->size,
+                   sizeof(size_t) * 2) + il2c_sizeof__(generic_T),
                  sizeof(System_Int32)) + sizeof(System_Int32),
                alignof(GenericClass_T_Layout)) + sizeof(GenericClass_T_Layout),
-               max(alignof(AlignmentGenericClass_T), generic_T->alignment);
+               max(alignof(AlignmentGenericClass_T), sizeof(size_t) * 2));
 }
 
-inline GenericClass_T_Layout CreateLayout_GenericClass_T(const TypeInfo *generic_T) {
+inline GenericClass_T_Layout CreateLayout_GenericClass_T(IL2C_RUNTIME_TYPE generic_T) {
     return {
-        generic_T,
-        CalcTotalSizeGenericClass_T(generic_T),
-        {
-            0,
-            il2c_calc_field_pos(sizeof(System_Object*), generic_T->alignment),
-            il2c_calc_field_pos(il2c_calc_field_pos(sizeof(System_Object*), generic_T->alignment) + generic_T->size, sizeof(System_Int32))
-        }
+        0,
+        il2c_calc_field_pos(sizeof(System_Object*), sizeof(size_t) * 2),
+        il2c_calc_field_pos(il2c_calc_field_pos(sizeof(System_Object*), sizeof(size_t) * 2) + generic_T->size, sizeof(System_Int32))
     };
 }
 
-void GenericClass_T_ctor(const TypeInfo *generic_T, void *this) {
+typedef struct GenericClass_T_RUNTIME_EXECUTION_STATIC_FIELDS_DECL__ /* IL2C_STATIC_FIELDS */
+{
+    IL2C_STATIC_FIELDS* pNext__;
+    const uint16_t objRefCount__;
+    const uint16_t valueCount__;
+    //-------------------- objref
+    Il2CSandBox_Hoge* hogehoge;
+} GenericClass_T_RUNTIME_EXECUTION_STATIC_FIELDS;
+
+
+static il2c_Dictionary runtimeDictionary_GenericClass_T;
+
+static GenericClass_T_GENERIC_CONTEXT* GenericClass_T__TryIntialize__(IL2C_RUNTIME_TYPE generic_T) {
+    GenericClass_T_GENERIC_CONTEXT** staticFields = (GenericClass_T_GENERIC_CONTEXT**)il2c_dic_getValue(&runtimeDictionary_GenericClass_T, generic_T);
+    if (staticFields != NULL) {
+        return *staticFields;
+    }
+    GenericClass_T_GENERIC_CONTEXT* newField = CreateGenericClass_T_GENERIC_CONTEXT(generic_T);
+    // TODO try catch
+    GenericClass_T__cctor(newField->fields);
+
+    il2c_dic_set(&runtimeDictionary_GenericClass_, generic_T, newField);
+    return newField;
+}
+
+SystemString** GenericClass_T_Str_HANDLER__(IL2C_RUNTIME_TYPE generic_T, GenericClass_T_GENERIC_CONTEXT** genericContext)
+{
+    if (*genericContext == NULL) {
+        *genericContext = GenericClass_T__TryIntialize__(generic_T);
+    }
+    return &(*genericContext)->fields->Str;
+}
+
+void GenericClass_T_ctor(IL2C_RUNTIME_TYPE generic_T, void *this) {
     void *stack0_0;
     GenericClass_T_Layout layout;
 
@@ -60,7 +100,7 @@ void GenericClass_T_ctor(const TypeInfo *generic_T, void *this) {
     /* IL_0007: ret */
 }
 
-inline const GenericClass_T_Layout *GetLayoutGenericClass_T(void *obj) {
+inline const GenericClass_T_Layout* GetLayoutGenericClass_T(void *obj) {
     return (const GenericClass_T_Layout *)((uint8_t*)obj)[il2c_calc_field_pos(
                il2c_calc_field_pos(
                  il2c_calc_field_pos(
@@ -71,23 +111,16 @@ inline const GenericClass_T_Layout *GetLayoutGenericClass_T(void *obj) {
 }
 
 inline System_Object **GetGenericClass_T_base(void *obj, const GenericClass_T_Layout *layout) {
-    return (System_Object*)((char*)obj)[layout->pos.base];
+    return (System_Object*)((char*)obj)[layout->base];
 }
 
 inline void **GetGenericClass_T_value(void *obj, const GenericClass_T_Layout *layout) {
-    return (void*)((char*)obj)[layout->pos.value];
+    return (void*)((char*)obj)[layout->value];
 }
 
 inline System_Int32 *GetGenericClass_T_integer(void *obj, const GenericClass_T_Layout *layout) {
-    return (System_Int32 *)((char*)obj)[layout->pos.integer];
+    return (System_Int32 *)((char*)obj)[layout->integer];
 }
-
-
-typedef struct {
-    const MemberPos_GenericClass this;
-    const size_t typeT;
-} ExecPos_GenericClass_T_GenericReturn;
-
 
 void GenericClass_T_GenericReturn(void *result, void *this) {
     // .locals init (
@@ -172,3 +205,19 @@ IGenericParent_T_VTABLE_DECL__ GenericClass_T_IGnericParent_VTABLE__ = {
     il2c_adjustor_offset(Il2CSandBox_Hoge, Il2CSandBox_IHoge),
     GenericClass_T_GenericReturn,
 };
+
+static GenericClass_T_GENERIC_CONTEXT* CreateGenericClass_T_GENERIC_CONTEXT(IL2C_RUNTIME_TYPE generic_T) {
+    GenericClass_T_GENERIC_CONTEXT* info;
+    uintptr_t totalSize = CalcTotalSizeGenericClass_T(generic_T);
+    IL2C_RUNTIME_TYPE_BEGIN(RuntimeInfo, "GenericClass<T>", IL2C_TYPE_REFERENCE, totalSize, System_Object, 0, 1)
+        IL2C_RUNTIME_TYPE_INTERFACE(Il2CSandBox_Hoge, Il2CSandBox_IHoge)
+    IL2C_RUNTIME_TYPE_END();
+
+    info = (GenericClass_T_GENERIC_CONTEXT*)il2c_malloc(sizeof(GenericClass_T_GENERIC_CONTEXT));
+
+    info->layout = CreateLayout_GenericClass_T(generic_T);
+    info->runtimeType = *il2c_typeof(RuntimeInfo);
+    info->fields = {};
+
+    return info;
+}
