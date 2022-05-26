@@ -16,6 +16,7 @@ typedef struct GenericClass_T_STATIC_FIELDS_DECL__ {
 typedef struct GenericClass_T_RUNTIME_TYPE_DECL__ {
     IL2C_RUNTIME_TYPE_DECL runtimeType;
     uintptr_t interfaces[2][1];
+    IL2C_RUNTIME_TYPE_DECL genericParams[1];
 } GenericClass_T_RUNTIME_TYPE;
 
 typedef struct GenericClass_T_GENERIC_CONTEXT_DECL {
@@ -206,17 +207,20 @@ IGenericParent_T_VTABLE_DECL__ GenericClass_T_IGnericParent_VTABLE__ = {
     GenericClass_T_GenericReturn,
 };
 
+IL2C_RUNTIME_TYPE_GENERIC_DEF_BEGIN(GenericClass_T, "GenericClass<T>", IL2C_TYPE_REFERENCE, System_Object, 1, 0, 1)
+    IL2C_RUNTIME_TYPE_INTERFACE(GenericClass_T, IGeneric_T)
+IL2C_RUNTIME_TYPE_END();
+
 static GenericClass_T_GENERIC_CONTEXT* CreateGenericClass_T_GENERIC_CONTEXT(IL2C_RUNTIME_TYPE generic_T) {
-    GenericClass_T_GENERIC_CONTEXT* info;
+    GenericClass_T_GENERIC_CONTEXT* genericCtx;
     uintptr_t totalSize = CalcTotalSizeGenericClass_T(generic_T);
-    IL2C_RUNTIME_TYPE_BEGIN(RuntimeInfo, "GenericClass<T>", IL2C_TYPE_REFERENCE, totalSize, System_Object, 0, 1)
-        IL2C_RUNTIME_TYPE_INTERFACE(Il2CSandBox_Hoge, Il2CSandBox_IHoge)
-    IL2C_RUNTIME_TYPE_END();
 
     info = (GenericClass_T_GENERIC_CONTEXT*)il2c_malloc(sizeof(GenericClass_T_GENERIC_CONTEXT));
 
     info->layout = CreateLayout_GenericClass_T(generic_T);
-    info->runtimeType = *il2c_typeof(RuntimeInfo);
+    info->runtimeType = *il2c_typeof(GenericClass_T);
+    *(uintptr*)&info->runtimeType->flag = IL2C_TYPE_GENERIC_INSTANCE;
+    *(uintptr*)&info->runtimeType->bodySize = totalSize;
     info->fields = {};
 
     return info;
