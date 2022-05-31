@@ -10,7 +10,7 @@ class GenericClass<T> : IGeneric<T> {
     T value;
     int integer;
 
-    static string Str;
+    public static string Str;
 
     // .locals init (
     //     [0] !T
@@ -280,6 +280,25 @@ static class Extensions {
 }
 
 class MainClass {
+
+    public void GetGenericStaticVar() {
+        // // Method begins at RVA 0x220c
+        // // Code size 14 (0xe)
+        // .maxstack 1
+        // .locals init (
+        //     [0] string str,
+        //     [1] string integer
+        // )
+
+        // IL_0000: nop
+        // IL_0001: ldsfld string class GenericClass`1<string>::Str
+        // IL_0006: stloc.0
+        // IL_0007: ldsfld string class GenericClass`1<int32>::Str
+        // IL_000c: stloc.1
+        // IL_000d: ret
+        var str = GenericClass<string>.Str;
+        var integer = GenericClass<int>.Str;
+    }
 
     public static void Main() {
         Extensions.GenericAction<int>(20);
