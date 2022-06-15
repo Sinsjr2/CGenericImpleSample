@@ -22,9 +22,6 @@ void MainClass_GetGenericStaticVar() {
     // IL_000c: stloc.1
     integer = stack_0_0;
     // IL_000d: ret
-
-    var str = GenericClass<string>.Str;
-    var integer = GenericClass<int>.Str;
 }
 
 

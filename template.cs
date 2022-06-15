@@ -6,7 +6,7 @@ public interface IGeneric<T>: IGenericParent<T> {
     void GenericAction(T x);
 }
 
-class GenericClass<T> : IGeneric<T> {
+public class GenericClass<T> : IGeneric<T> {
     T value;
     int integer;
 
@@ -279,7 +279,7 @@ static class Extensions {
     }
 }
 
-class MainClass {
+public class MainClass {
 
     public void GetGenericStaticVar() {
         // // Method begins at RVA 0x220c
